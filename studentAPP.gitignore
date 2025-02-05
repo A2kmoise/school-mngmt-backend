@@ -1,0 +1,3 @@
+#ignore studentApp.env and node_modules.
+studentApp.env
+node_modules/
