@@ -1,9 +1,11 @@
 import teacher_modules from '../models/teacher_modules'
 import student_modules from '../models/student_modules'
 import joi from 'joi'
-import bcrpt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import config from 'config'
+//userroles missing
+//Teachers missing
 
 const teacherSchema = Joi.object({
   username: Joi.string().required(),
@@ -22,10 +24,18 @@ exports.register = async (req, res) => {
     const role = await UserRole.findById(req.body.role);
     if (!role) return res.status(400).json({ message: 'Invalid role' });
 
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+
+    const teacherData = {
+      ...req.body,
+      password: hashedPassword
+    }
+
     const teacher = new Teacher(req.body);
     await teacher.save();
 
-    const token = jwt.sign({ id: tconsteacher._id }, config.get('jwtSecret'), { expiresIn: '1h' });
+    const token = jwt.sign({ id: teacher._id }, config.get('jwtSecret'), { expiresIn: '1h' });
     res.status(201).json({ token });
   } catch (error) {
     debug(error);

@@ -18,6 +18,15 @@ exports.register = async(req,res) =>{
     try {
        const { error } = studentSchema.validate(req.body);
        if(error) return res.status(400).json( {message: error.details[0].message}) 
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+    
+        const studentData = {
+          ...req.body,
+          password: hashedPassword
+        }
+    
         
       const student = new Student(req.body)
       await student.save()
