@@ -58,7 +58,7 @@ try {
 
 exports.getStudents = async (req ,res) => {
     try {
-       const teacher = await Teacher.find()
+       const teacher = await Student.find()
        res.json(students) 
     } catch (error) {
         debug(error)
